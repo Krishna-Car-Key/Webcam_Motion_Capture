@@ -18,6 +18,11 @@ while True:
     if first_frame is None:
         first_frame = gray_frame_gau
 
+    delta_frame = cv2.absdiff(first_frame, gray_frame_gau)
+
+    thresh_frame = cv2.threshold(delta_frame, 65, 255, cv2.THRESH_BINARY)[1]
+    dil_frame = cv2.dilate(thresh_frame, None, iterations=2)
+
     cv2.imshow("Video", frame)
 
     key = cv2.waitKey(0)
