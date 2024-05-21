@@ -1,19 +1,31 @@
 import os
+from email.message import EmailMessage
 import smtplib
-import ssl
+import imghdr
 
 HOST = "smtp.gmail.com"
-CONTEXT = ssl.create_default_context()
-password = os.getenv("PASSWORD")
-PORT = 465
+PASSWORD = os.getenv("PASSWORD")
+PORT = 587
+SENDER = "emailexperimental70@gmail.com"
+RECEIVER = "emailexperimental70@gmail.com"
 
 
-def send_email():
-    message = ("""\
-Subject: Some object caught\n
-There is some object front of me!
-""")
-    username = "emailexperimental70@gmail.com"
-    with smtplib.SMTP_SSL(HOST, PORT, context=CONTEXT) as server:
-        server.login(username, password=password)
-        server.sendmail(username, username, message)
+def send_email(image_path):
+    email_message = EmailMessage()
+    email_message['Subject'] = "New Client appeared!"
+    email_message.set_content("There is a new client chief!")
+
+    with open(image_path, "rb") as file:
+        content = file.read()
+
+    email_message.add_attachment(content, maintype="image", subtype=imghdr.what(None, content))
+
+    gmail = smtplib.SMTP(HOST, PORT)
+    gmail.ehlo()
+    gmail.starttls()
+    gmail.login(RECEIVER, PASSWORD)
+    gmail.sendmail(SENDER, RECEIVER, email_message.as_string())
+
+
+if __name__ == "__main__":
+    send_email("images/10.png")

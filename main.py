@@ -57,7 +57,7 @@ while True:
     main_status_list.append(status)
     status_list = main_status_list[-2:]
     if status_list[0] == 1 and status_list[1] == 0:
-        send_email()
+        send_email(frame_with_object)
 
     cv2.imshow("Video", frame)
 
