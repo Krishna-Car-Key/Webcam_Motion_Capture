@@ -25,6 +25,7 @@ def send_email(image_path):
     gmail.starttls()
     gmail.login(RECEIVER, PASSWORD)
     gmail.sendmail(SENDER, RECEIVER, email_message.as_string())
+    gmail.quit()
 
 
 if __name__ == "__main__":

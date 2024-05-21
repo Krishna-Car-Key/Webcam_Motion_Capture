@@ -1,9 +1,16 @@
 import glob
-
+import os
 import cv2
 import time
 from Send_Email import send_email
 import numpy
+
+
+def clean_folder():
+    filepaths = glob.glob("images/*.png")
+    for filepath in filepaths:
+        os.remove(filepath)
+
 
 video = cv2.VideoCapture(0)
 
@@ -58,6 +65,7 @@ while True:
     status_list = main_status_list[-2:]
     if status_list[0] == 1 and status_list[1] == 0:
         send_email(frame_with_object)
+        clean_folder()
 
     cv2.imshow("Video", frame)
 
