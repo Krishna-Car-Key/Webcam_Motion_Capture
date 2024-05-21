@@ -3,7 +3,7 @@ import os
 import cv2
 import time
 from Send_Email import send_email
-import numpy
+from threading import Thread
 
 
 def clean_folder():
@@ -64,8 +64,12 @@ while True:
     main_status_list.append(status)
     status_list = main_status_list[-2:]
     if status_list[0] == 1 and status_list[1] == 0:
-        send_email(frame_with_object)
-        clean_folder()
+        email_thread = Thread(target=send_email, args=(frame_with_object, ))
+        email_thread.daemon = True
+        clean_folder_thread = Thread(target=clean_folder)
+        clean_folder_thread.daemon = True
+
+        email_thread.run()
 
     cv2.imshow("Video", frame)
 
@@ -75,3 +79,5 @@ while True:
         break
 
 video.release()
+
+clean_folder_thread.run()
